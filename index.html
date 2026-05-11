@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline Jumpers: Step 7: Timeline Anchors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a1f;
+    --mid: #15122e;
+    --card: rgba(30,26,62,0.6);
+    --border: rgba(255,255,255,0.08);
+    --glow-border: rgba(28,214,231,0.35);
+    --cyan: #1cd6e7;
+    --magenta: #f62bd1;
+    --purple: #8051c8;
+    --amber: #f4a749;
+    --text-pri: #f8f5ff;
+    --text-sec: rgba(248,245,255,0.72);
+    --text-muted: rgba(248,245,255,0.35);
+    --gradient: linear-gradient(135deg, #1cd6e7, #8051c8, #f62bd1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-pri);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── STARS ── */
+  #stars {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    opacity: var(--op, 0.5);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--op, 0.5); transform: scale(1); }
+    50% { opacity: calc(var(--op, 0.5) * 0.2); transform: scale(0.7); }
+  }
+
+  /* ── COSMIC GLOWS ── */
+  #glows {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.18;
+  }
+  .glow-cyan    { width: 600px; height: 600px; background: var(--cyan);    top: -180px; left: -180px; }
+  .glow-magenta { width: 500px; height: 500px; background: var(--magenta); bottom: -150px; right: -150px; }
+  .glow-purple  { width: 700px; height: 700px; background: var(--purple);  top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0.12; }
+
+  /* ── CURSOR TRAIL ── */
+  #cursor-dot {
+    position: fixed;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--cyan);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 0 10px var(--cyan);
+    transition: opacity 0.15s;
+  }
+  .trail-particle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--mid);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 40px;
+  }
+  .progress-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .progress-phase {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-sec);
+  }
+  .progress-count {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--cyan);
+  }
+  .progress-track {
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: calc(7 / 7 * 100%);
+    background: var(--gradient);
+    border-radius: 2px;
+  }
+
+  /* ── INTENTION BLOCK ── */
+  #intention {
+    background: var(--mid);
+    padding: 32px 40px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  #intention::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gradient);
+  }
+  .intention-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    text-shadow: 0 0 12px rgba(28,214,231,0.7);
+    margin-bottom: 14px;
+  }
+  .intention-statement {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(16px, 3vw, 20px);
+    color: var(--text-pri);
+    max-width: 620px;
+    margin: 0 auto 14px;
+    line-height: 1.5;
+  }
+  .intention-sub {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(248,245,255,0.3);
+  }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── STEP HEADER ── */
+  .step-header {
+    padding: 52px 0 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .step-eyebrow-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-sec);
+  }
+  .step-badge {
+    background: var(--cyan);
+    color: #0a0a1f;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    border-radius: 30px;
+    padding: 4px 10px;
+    text-transform: uppercase;
+  }
+  .step-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 40px);
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .gradient-word {
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-style: italic;
+  }
+  .step-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    color: var(--text-sec);
+    line-height: 1.7;
+    max-width: 580px;
+  }
+
+  /* ── SECTION BLOCKS ── */
+  .section-block {
+    padding-top: 48px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .section-block:nth-child(1) { animation-delay: 0.1s; }
+  .section-block:nth-child(2) { animation-delay: 0.25s; }
+  .section-block:nth-child(3) { animation-delay: 0.4s; }
+  .section-block:nth-child(4) { animation-delay: 0.55s; }
+  .section-block:nth-child(5) { animation-delay: 0.7s; }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 16px;
+  }
+  .section-label.magenta { color: var(--magenta); }
+  .section-label.amber   { color: var(--amber); }
+
+  .teaching-p {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text-sec);
+    margin-bottom: 16px;
+  }
+  .teaching-p:last-of-type { margin-bottom: 0; }
+
+  /* ── BEFORE YOU WRITE CARD ── */
+  .before-write {
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glow-border);
+    border-radius: 16px;
+    padding: 36px 40px 32px;
+    text-align: center;
+    margin-top: 32px;
+  }
+  .breathing-ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px; height: 64px;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid var(--cyan);
+    animation: breathe 4s ease-in-out infinite;
+  }
+  .ring-1 { width: 24px; height: 24px; opacity: 0.7; animation-delay: 0s; }
+  .ring-2 { width: 44px; height: 44px; opacity: 0.4; animation-delay: 0.4s; }
+  .ring-3 { width: 64px; height: 64px; opacity: 0.15; animation-delay: 0.8s; }
+  @keyframes breathe {
+    0%, 100% { transform: scale(0.92); }
+    50%       { transform: scale(1.06); }
+  }
+  .before-write-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 14px;
+  }
+  .before-write-body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--text-sec);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  /* ── REFLECTION CARDS ── */
+  .reflection-card {
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--cyan);
+    border-radius: 0 12px 12px 0;
+    padding: 28px;
+    margin-top: 20px;
+    box-shadow: 0 0 18px rgba(28,214,231,0.08), 0 0 40px rgba(28,214,231,0.04);
+    transition: box-shadow 0.3s;
+  }
+  .reflection-card:hover {
+    box-shadow: 0 0 28px rgba(28,214,231,0.18), 0 0 60px rgba(28,214,231,0.08);
+  }
+  .reflection-card.magenta-accent {
+    border-left-color: var(--magenta);
+    box-shadow: 0 0 18px rgba(246,43,209,0.08), 0 0 40px rgba(246,43,209,0.04);
+  }
+  .reflection-card.magenta-accent:hover {
+    box-shadow: 0 0 28px rgba(246,43,209,0.18), 0 0 60px rgba(246,43,209,0.08);
+  }
+  .reflection-prompt {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--text-sec);
+    margin-bottom: 10px;
+    line-height: 1.7;
+  }
+  .reflection-starter {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--cyan);
+    margin-bottom: 14px;
+  }
+  .reflection-starter.magenta { color: var(--magenta); }
+  .reflection-textarea {
+    width: 100%;
+    background: rgba(10,10,31,0.7);
+    border: none;
+    border-top: 2px solid var(--cyan);
+    border-radius: 0 0 6px 6px;
+    padding: 16px;
+    color: var(--text-pri);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.75;
+    resize: vertical;
+    min-height: 120px;
+    outline: none;
+    transition: box-shadow 0.25s;
+  }
+  .reflection-textarea:focus {
+    box-shadow: inset 0 0 16px rgba(28,214,231,0.08);
+  }
+  .reflection-textarea.magenta-top { border-top-color: var(--magenta); }
+  .reflection-textarea.magenta-top:focus {
+    box-shadow: inset 0 0 16px rgba(246,43,209,0.08);
+  }
+  .reflection-textarea::placeholder { color: var(--text-muted); }
+  .save-notice {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+
+  /* Anchor list inside reflection card */
+  .anchor-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .anchor-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .anchor-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--cyan);
+    width: 22px;
+    flex-shrink: 0;
+    padding-top: 13px;
+    opacity: 0.6;
+  }
+  .anchor-input {
+    flex: 1;
+    background: rgba(10,10,31,0.7);
+    border: none;
+    border-top: 2px solid var(--cyan);
+    border-radius: 0 0 6px 6px;
+    padding: 12px 14px;
+    color: var(--text-pri);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    min-height: 48px;
+    outline: none;
+    transition: box-shadow 0.25s;
+  }
+  .anchor-input:focus { box-shadow: inset 0 0 14px rgba(28,214,231,0.08); }
+  .anchor-input::placeholder { color: var(--text-muted); }
+
+  .add-row-btn {
+    background: transparent;
+    border: 1px dashed rgba(28,214,231,0.3);
+    border-radius: 8px;
+    padding: 10px 18px;
+    color: var(--cyan);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    margin-top: 4px;
+    display: inline-block;
+  }
+  .add-row-btn:hover { background: rgba(28,214,231,0.06); border-color: rgba(28,214,231,0.55); }
+
+  /* ── SAVE YOUR WORK ── */
+  .save-work {
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 48px;
+  }
+  .save-work h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--text-pri);
+    margin-bottom: 10px;
+  }
+  .save-work p {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    color: var(--text-sec);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn-gradient {
+    background: var(--gradient);
+    border: none;
+    border-radius: 30px;
+    padding: 13px 28px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .btn-gradient:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .btn-back {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 30px;
+    padding: 13px 28px;
+    color: rgba(255,255,255,0.9);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.08); }
+
+  /* DONE btn */
+  .done-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  #done-btn {
+    background: var(--gradient);
+    border: none;
+    border-radius: 30px;
+    padding: 13px 32px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  #done-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  #done-check {
+    display: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-left: auto;
+    padding: 13px 0;
+  }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--mid);
+    border: 1px solid var(--glow-border);
+    border-radius: 30px;
+    padding: 12px 24px;
+    color: var(--cyan);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding: 32px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    color: rgba(248,245,255,0.25);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 600px) {
+    #progress-bar { padding: 14px 20px; }
+    #intention { padding: 28px 20px; }
+    #main { padding: 0 16px 60px; }
+    .step-header { padding: 36px 0 28px; }
+    .before-write { padding: 28px 20px; }
+    .reflection-card { padding: 22px 18px; }
+    .save-work { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div id="glows">
+  <div class="glow glow-cyan"></div>
+  <div class="glow glow-magenta"></div>
+  <div class="glow glow-purple"></div>
+</div>
+<div id="cursor-dot"></div>
+<div id="toast"></div>
+
+<!-- Intention Block -->
+<div id="intention">
+  <div class="intention-eyebrow">Selection Phase &nbsp;·&nbsp; Step 7 of 7</div>
+  <div class="intention-statement">I am training my awareness to recognize evidence that my new timeline is already becoming real.</div>
+  <div class="intention-sub">Set this intention before you begin</div>
+</div>
+
+<!-- Progress Bar -->
+<div id="progress-bar">
+  <div class="progress-inner">
+    <div class="progress-meta">
+      <span class="progress-phase">Selection Phase</span>
+      <span class="progress-count">Step 7 of 7</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div id="main">
+
+  <!-- Step Header -->
+  <div class="step-header">
+    <div class="step-eyebrow">
+      <span class="step-badge">Step 7</span>
+      <span class="step-eyebrow-text">Selection Phase</span>
+    </div>
+    <h1 class="step-title">Create Your <span class="gradient-word">Timeline Anchors</span></h1>
+    <p class="step-subtitle">Signs, signals, and visual evidence that confirm your new timeline is already coming into form.</p>
+  </div>
+
+  <!-- Teaching Copy Block 1 -->
+  <div class="section-block">
+    <div class="section-label">What This Step Is</div>
+    <p class="teaching-p">In this step you are going to create your timeline anchors: the signs and signals you would expect to experience on the timeline you are selecting. These are things that could come up in your day to day that tell you your new reality is coming into form.</p>
+    <p class="teaching-p">This is about calibrating your perception and training your brain to look for confirming evidence. Where your focus goes, energy flows. You are programming your subconscious to understand that these signs are important to you so that your energy begins to direct itself toward finding them.</p>
+    <p class="teaching-p">You are not waiting for proof. You are choosing what to look for. And by looking for it, you create the conditions for it to show up.</p>
+  </div>
+
+  <!-- Before You Write -->
+  <div class="section-block">
+    <div class="before-write">
+      <div class="breathing-ring">
+        <span class="ring ring-1"></span>
+        <span class="ring ring-2"></span>
+        <span class="ring ring-3"></span>
+      </div>
+      <div class="before-write-label">Before You Write</div>
+      <div class="before-write-body">Take a breath and bring your new timeline to mind. Feel into it for a moment. What does that reality feel like? Let that feeling guide what you write below.</div>
+    </div>
+  </div>
+
+  <!-- Evidence Anchors -->
+  <div class="section-block">
+    <div class="section-label">Part One: Evidence Anchors</div>
+    <p class="teaching-p">Make an itemized list of signs and signals you would expect to see on your new timeline. Think about what would show up in your email inbox, in your bank account, in conversations, in your body, or in the kinds of opportunities that come your way. Keep this list handy and revisit it daily or weekly. You can always add to it.</p>
+
+    <div class="reflection-card">
+      <div class="reflection-prompt">What signs or signals would tell you that your new timeline is becoming real? List anything that would look or feel different from your current reality.</div>
+      <div class="reflection-starter">On my new timeline I would notice...</div>
+      <div class="anchor-rows" id="anchorRows">
+        <div class="anchor-row"><span class="anchor-num">01</span><textarea class="anchor-input" rows="1" placeholder="e.g. unexpected money showing up, new opportunities appearing, my body feeling lighter..."></textarea></div>
+        <div class="anchor-row"><span class="anchor-num">02</span><textarea class="anchor-input" rows="1" placeholder=""></textarea></div>
+        <div class="anchor-row"><span class="anchor-num">03</span><textarea class="anchor-input" rows="1" placeholder=""></textarea></div>
+        <div class="anchor-row"><span class="anchor-num">04</span><textarea class="anchor-input" rows="1" placeholder=""></textarea></div>
+        <div class="anchor-row"><span class="anchor-num">05</span><textarea class="anchor-input" rows="1" placeholder=""></textarea></div>
+      </div>
+      <button class="add-row-btn" onclick="addAnchorRow()">+ Add another</button>
+      <p class="save-notice" style="margin-top:16px;">This page does not save your responses. Save when done or transfer to your favourite journal.</p>
+    </div>
+  </div>
+
+  <!-- Random Confirmation Sign -->
+  <div class="section-block">
+    <div class="section-label magenta">Part Two: Your Random Confirmation Sign</div>
+    <p class="teaching-p">Add at least one anchor that is so random you would not ordinarily expect to see it. When this sign appears in your life, you will know without question that your timeline is locking in. Your higher self and spirit team will find ways to put it in front of you because you placed it on the list and made it important to you.</p>
+    <p class="teaching-p">For example: blue feathers. Not something you would normally spot on a walk or in your neighborhood, but one day a logo, a truck, a storefront might show it to you. And you will know.</p>
+
+    <div class="reflection-card magenta-accent">
+      <div class="reflection-prompt">What is your random confirmation sign? Choose something unexpected, something that would make you stop and smile if it appeared.</div>
+      <div class="reflection-starter magenta">My random confirmation sign is...</div>
+      <textarea class="reflection-textarea magenta-top" rows="3" placeholder="Describe your unexpected sign..."></textarea>
+      <p class="save-notice">This page does not save your responses. Save when done or transfer to your favourite journal.</p>
+    </div>
+  </div>
+
+  <!-- Visual Anchor -->
+  <div class="section-block">
+    <div class="section-label">Part Three: Visual Timeline Anchor</div>
+    <p class="teaching-p">Create a visual that represents your new timeline. This can be a Canva image, a journal drawing, a phone wallpaper, or a vivid mental picture you can call up instantly. It does not need to be elaborate. What matters is that you can pull it to mind easily.</p>
+    <p class="teaching-p">Use this image first thing in the morning and right before you go to bed. Anytime your mind begins to drift or doubt starts creeping in, call up this image and redirect your energy toward what you are building.</p>
+
+    <div class="reflection-card">
+      <div class="reflection-prompt">Describe your visual anchor. What does it look like? What does it feel like when you see it? How will you make it accessible, on your phone, in your journal, or as a mental image you can summon?</div>
+      <div class="reflection-starter">My visual anchor is...</div>
+      <textarea class="reflection-textarea" rows="5" placeholder="Describe your image and how you will use it each day..."></textarea>
+      <p class="save-notice">This page does not save your responses. Save when done or transfer to your favourite journal.</p>
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div class="done-row">
+    <button id="done-btn" onclick="markDone()">Done</button>
+    <span id="done-check">&#10003; Step Complete</span>
+  </div>
+
+  <!-- Save Your Work -->
+  <div class="save-work">
+    <h3>Save Your Work</h3>
+    <p>Your responses are not saved automatically. Click below to copy them, then paste into your notes app on your phone or computer.</p>
+    <div class="btn-row">
+      <button class="btn-gradient" onclick="copyResponses()">Copy My Responses</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<footer>© 2026 Ceyda Seren. All rights reserved.</footer>
+
+<script>
+  /* ── STARS ── */
+  (function() {
+    const container = document.getElementById('stars');
+    for (let i = 0; i < 120; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2 + 0.5;
+      const op   = (Math.random() * 0.5 + 0.2).toFixed(2);
+      const dur  = (Math.random() * 4 + 2).toFixed(1);
+      s.style.cssText = `
+        width:${size}px; height:${size}px;
+        top:${Math.random()*100}%;
+        left:${Math.random()*100}%;
+        --op:${op}; --dur:${dur}s;
+        animation-delay:${(Math.random()*6).toFixed(1)}s;
+      `;
+      container.appendChild(s);
+    }
+  })();
+
+  /* ── CURSOR TRAIL ── */
+  (function() {
+    const dot = document.getElementById('cursor-dot');
+    const colors = ['#1cd6e7','#f62bd1','#8051c8','#f4a749'];
+    let mx = -100, my = -100, moveCount = 0;
+    const particles = [];
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px';
+      dot.style.top  = my + 'px';
+
+      // trail particle
+      const p = document.createElement('div');
+      p.className = 'trail-particle';
+      const c = colors[Math.floor(Math.random() * colors.length)];
+      const sz = Math.random() * 5 + 3;
+      p.style.cssText = `
+        left:${mx}px; top:${my}px;
+        width:${sz}px; height:${sz}px;
+        background:${c};
+        box-shadow:0 0 6px ${c};
+        opacity:0.7;
+        transition: opacity 0.5s, transform 0.5s;
+      `;
+      document.body.appendChild(p);
+      setTimeout(() => { p.style.opacity = '0'; p.style.transform = 'translate(-50%,-50%) scale(0.2)'; }, 50);
+      setTimeout(() => { p.remove(); }, 600);
+
+      // occasional sparkle
+      moveCount++;
+      if (moveCount % 15 === 0) {
+        const sp = document.createElement('div');
+        sp.style.cssText = `
+          position:fixed; left:${mx}px; top:${my}px;
+          font-size:12px; color:#1cd6e7;
+          pointer-events:none; z-index:9997;
+          transform:translate(-50%,-50%);
+          text-shadow:0 0 8px #1cd6e7;
+          transition: opacity 0.6s, transform 0.6s;
+        `;
+        sp.textContent = '✦';
+        document.body.appendChild(sp);
+        setTimeout(() => { sp.style.opacity = '0'; sp.style.transform = 'translate(-50%,-120%) scale(0.5)'; }, 50);
+        setTimeout(() => { sp.remove(); }, 700);
+      }
+    });
+  })();
+
+  /* ── ADD ANCHOR ROW ── */
+  let anchorCount = 5;
+  function addAnchorRow() {
+    anchorCount++;
+    const num = String(anchorCount).padStart(2, '0');
+    const row = document.createElement('div');
+    row.className = 'anchor-row';
+    row.innerHTML = `<span class="anchor-num">${num}</span><textarea class="anchor-input" rows="1" placeholder=""></textarea>`;
+    document.getElementById('anchorRows').appendChild(row);
+    const ta = row.querySelector('textarea');
+    ta.addEventListener('input', autoResize);
+    ta.focus();
+  }
+
+  /* ── AUTO RESIZE TEXTAREAS ── */
+  function autoResize() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+  }
+  document.querySelectorAll('textarea').forEach(ta => ta.addEventListener('input', autoResize));
+
+  /* ── COPY RESPONSES ── */
+  function copyResponses() {
+    const lines = ['TIMELINE JUMPERS - Step 7: Timeline Anchors', ''];
+
+    lines.push('EVIDENCE ANCHORS:');
+    document.querySelectorAll('#anchorRows .anchor-input').forEach((ta, i) => {
+      const v = ta.value.trim();
+      if (v) lines.push(`${String(i+1).padStart(2,'0')}. ${v}`);
+    });
+
+    const random = document.querySelectorAll('.reflection-textarea')[0];
+    if (random && random.value.trim()) {
+      lines.push('');
+      lines.push('RANDOM CONFIRMATION SIGN:');
+      lines.push(random.value.trim());
+    }
+
+    const visual = document.querySelectorAll('.reflection-textarea')[1];
+    if (visual && visual.value.trim()) {
+      lines.push('');
+      lines.push('VISUAL ANCHOR:');
+      lines.push(visual.value.trim());
+    }
+
+    const text = lines.join('\n');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => showToast('Responses copied!')).catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    showToast('Responses copied!');
+  }
+
+  /* ── DONE ── */
+  function markDone() {
+    document.getElementById('done-btn').style.display = 'none';
+    document.getElementById('done-check').style.display = 'block';
+  }
+  // Always show Done fresh on load
+  document.getElementById('done-btn').style.display = 'inline-block';
+  document.getElementById('done-check').style.display = 'none';
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+</script>
+</body>
+</html>
