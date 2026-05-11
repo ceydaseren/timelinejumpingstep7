@@ -532,59 +532,62 @@
   }
   .btn-back:hover { background: rgba(255,255,255,0.08); }
 
-  /* DONE btn */
-  .done-row {
+  /* ── NAV ROW ── */
+  .nav-row {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
+    align-items: center;
+    gap: 16px;
+    margin-top: 32px;
+    flex-wrap: wrap;
   }
-  #done-btn {
-    background: var(--gradient);
-    border: none;
-    border-radius: 30px;
-    padding: 13px 32px;
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.15s;
-  }
-  #done-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-  #done-check {
-    display: none;
+  .copy-feedback {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     font-size: 11px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--cyan);
-    margin-left: auto;
-    padding: 13px 0;
+    opacity: 0;
+    transition: opacity 0.3s;
   }
+  .copy-feedback.show { opacity: 1; }
 
-  /* Toast */
-  #toast {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background: var(--mid);
-    border: 1px solid var(--glow-border);
+  /* ── SKOOL BUTTON ── */
+  .btn-skool {
+    display: block;
+    width: 100%;
+    background: var(--gradient);
+    border: none;
     border-radius: 30px;
-    padding: 12px 24px;
-    color: var(--cyan);
+    padding: 18px 28px;
+    color: #fff;
     font-family: 'Inter', sans-serif;
     font-weight: 600;
-    font-size: 13px;
-    z-index: 100;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s, transform 0.3s;
-    white-space: nowrap;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: opacity 0.2s, transform 0.15s;
   }
-  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .btn-skool:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* ── TAP RIPPLE (mobile) ── */
+  .tap-ripple {
+    position: fixed;
+    border-radius: 50%;
+    width: 60px; height: 60px;
+    background: radial-gradient(circle, rgba(28,214,231,0.5) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 9997;
+    transform: translate(-50%,-50%) scale(0);
+    animation: ripple-out 0.5s ease-out forwards;
+  }
+  @keyframes ripple-out {
+    to { transform: translate(-50%,-50%) scale(2.5); opacity: 0; }
+  }
 
   /* ── FOOTER ── */
   footer {
@@ -621,7 +624,6 @@
   <div class="glow glow-purple"></div>
 </div>
 <div id="cursor-dot"></div>
-<div id="toast"></div>
 
 <!-- Intention Block -->
 <div id="intention">
@@ -725,20 +727,20 @@
     </div>
   </div>
 
-  <!-- Done -->
-  <div class="done-row">
-    <button id="done-btn" onclick="markDone()">Done</button>
-    <span id="done-check">&#10003; Step Complete</span>
+  <!-- Nav: Copy My Responses -->
+  <div class="nav-row">
+    <button class="btn-gradient" onclick="copyResponses()">Copy My Responses</button>
+    <span class="copy-feedback" id="copy-feedback">Copied!</span>
   </div>
 
   <!-- Save Your Work -->
   <div class="save-work">
     <h3>Save Your Work</h3>
-    <p>Your responses are not saved automatically. Click below to copy them, then paste into your notes app on your phone or computer.</p>
-    <div class="btn-row">
-      <button class="btn-gradient" onclick="copyResponses()">Copy My Responses</button>
-    </div>
+    <p>Your responses are not saved automatically. Use the Copy My Responses button above to copy them, then paste into your notes app on your phone or computer.</p>
   </div>
+
+  <!-- Take Me Back to Skool -->
+  <a class="btn-skool" href="https://www.skool.com/timeline-jumpers-9976/classroom" target="_blank" rel="noopener">Take Me Back to Skool</a>
 
 </div><!-- /main -->
 
@@ -860,10 +862,15 @@
     }
 
     const text = lines.join('\n');
+    const feedback = document.getElementById('copy-feedback');
+    const done = () => {
+      feedback.classList.add('show');
+      setTimeout(() => feedback.classList.remove('show'), 2400);
+    };
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => showToast('Responses copied!')).catch(() => fallbackCopy(text));
+      navigator.clipboard.writeText(text).then(done).catch(() => { fallbackCopy(text); done(); });
     } else {
-      fallbackCopy(text);
+      fallbackCopy(text); done();
     }
   }
 
@@ -875,24 +882,21 @@
     ta.select();
     document.execCommand('copy');
     ta.remove();
-    showToast('Responses copied!');
   }
 
-  /* ── DONE ── */
-  function markDone() {
-    document.getElementById('done-btn').style.display = 'none';
-    document.getElementById('done-check').style.display = 'block';
-  }
-  // Always show Done fresh on load
-  document.getElementById('done-btn').style.display = 'inline-block';
-  document.getElementById('done-check').style.display = 'none';
-
-  /* ── TOAST ── */
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2400);
+  /* ── MOBILE TAP RIPPLE ── */
+  if ('ontouchstart' in window) {
+    document.body.style.cursor = 'auto';
+    document.getElementById('cursor-dot').style.display = 'none';
+    document.body.addEventListener('touchstart', e => {
+      const touch = e.touches[0];
+      const r = document.createElement('div');
+      r.className = 'tap-ripple';
+      r.style.left = touch.clientX + 'px';
+      r.style.top  = touch.clientY + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 520);
+    }, { passive: true });
   }
 </script>
 </body>
