@@ -34,29 +34,82 @@
     cursor: none;
   }
 
+  /* ── STARS ── */
   .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .star { position: absolute; border-radius: 50%; background: #fff; animation: twinkle var(--dur,3s) ease-in-out infinite var(--delay,0s); opacity: 0; }
-  @keyframes twinkle { 0%,100% { opacity:0; transform:scale(0.8); } 50% { opacity:var(--op,0.6); transform:scale(1); } }
+  .star {
+    position: absolute; border-radius: 50%; background: #fff;
+    animation: twinkle var(--dur,3s) ease-in-out infinite var(--delay,0s); opacity: 0;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity:0; transform:scale(0.8); }
+    50% { opacity:var(--op,0.6); transform:scale(1); }
+  }
 
+  /* ── COSMIC BG ── */
   .cosmic-bg { position:fixed; inset:0; pointer-events:none; z-index:0; }
-  .cosmic-bg::before { content:''; position:absolute; top:-20%; left:-10%; width:60%; height:60%; background:radial-gradient(ellipse,rgba(28,214,231,0.07) 0%,transparent 70%); }
-  .cosmic-bg::after { content:''; position:absolute; bottom:-10%; right:-10%; width:55%; height:55%; background:radial-gradient(ellipse,rgba(246,43,209,0.07) 0%,transparent 70%); }
-  .cosmic-mid { position:fixed; top:40%; left:30%; width:50%; height:50%; background:radial-gradient(ellipse,rgba(128,81,200,0.06) 0%,transparent 70%); pointer-events:none; z-index:0; }
+  .cosmic-bg::before {
+    content:''; position:absolute; top:-20%; left:-10%; width:60%; height:60%;
+    background:radial-gradient(ellipse,rgba(28,214,231,0.07) 0%,transparent 70%);
+  }
+  .cosmic-bg::after {
+    content:''; position:absolute; bottom:-10%; right:-10%; width:55%; height:55%;
+    background:radial-gradient(ellipse,rgba(246,43,209,0.07) 0%,transparent 70%);
+  }
+  .cosmic-mid {
+    position:fixed; top:40%; left:30%; width:50%; height:50%;
+    background:radial-gradient(ellipse,rgba(128,81,200,0.06) 0%,transparent 70%);
+    pointer-events:none; z-index:0;
+  }
 
-  .cursor-dot { position:fixed; border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); animation:dotFade 0.6s ease forwards; }
-  @keyframes dotFade { 0% { opacity:0.9; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(-50%,-50%) scale(0.2); } }
-  .cursor-sparkle { position:fixed; pointer-events:none; z-index:9999; font-size:12px; transform:translate(-50%,-50%); animation:sparkleFade 0.8s ease forwards; }
-  @keyframes sparkleFade { 0% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(-50%,-120%) scale(0.5); } }
+  /* ── CURSOR ── */
+  .cursor-dot {
+    position:fixed; border-radius:50%; pointer-events:none; z-index:9999;
+    transform:translate(-50%,-50%); animation:dotFade 0.6s ease forwards;
+  }
+  @keyframes dotFade {
+    0% { opacity:0.9; transform:translate(-50%,-50%) scale(1); }
+    100% { opacity:0; transform:translate(-50%,-50%) scale(0.2); }
+  }
+  .cursor-sparkle {
+    position:fixed; pointer-events:none; z-index:9999; font-size:12px;
+    transform:translate(-50%,-50%); animation:sparkleFade 0.8s ease forwards;
+  }
+  @keyframes sparkleFade {
+    0% { opacity:1; transform:translate(-50%,-50%) scale(1); }
+    100% { opacity:0; transform:translate(-50%,-120%) scale(0.5); }
+  }
   @keyframes tapRipple { from{transform:scale(0);opacity:1;} to{transform:scale(2.5);opacity:0;} }
 
+  /* ── LAYOUT ── */
   .page-wrap { position:relative; z-index:1; }
 
-  .intention-block { width:100%; padding:32px 40px; text-align:center; position:relative; background:var(--mid); border-bottom:1px solid var(--border); overflow:hidden; }
-  .intention-block::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--gradient); }
-  .phase-eyebrow { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--cyan); margin-bottom:14px; text-shadow:0 0 12px rgba(28,214,231,0.7),0 0 24px rgba(28,214,231,0.3); }
-  .intention-statement { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(16px,3vw,20px); color:var(--text); line-height:1.4; max-width:620px; margin:0 auto; }
-  .intention-subtext { font-family:'Inter',sans-serif; font-weight:600; font-size:9px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(248,245,255,0.3); margin-top:14px; }
+  /* ── INTENTION BLOCK ── */
+  .intention-block {
+    width:100%; padding:32px 40px; text-align:center;
+    position:relative; background:var(--mid);
+    border-bottom:1px solid var(--border); overflow:hidden;
+  }
+  .intention-block::after {
+    content:''; position:absolute; top:0; left:0; right:0;
+    height:2px; background:var(--gradient);
+  }
+  .phase-eyebrow {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+    letter-spacing:0.22em; text-transform:uppercase; color:var(--cyan);
+    margin-bottom:14px; text-shadow:0 0 12px rgba(28,214,231,0.7),0 0 24px rgba(28,214,231,0.3);
+  }
+  .intention-statement {
+    font-family:'Fraunces',serif; font-weight:700;
+    font-size:clamp(16px,3vw,20px); color:var(--text);
+    line-height:1.4; max-width:620px; margin:0 auto;
+  }
+  .intention-subtext {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:9px;
+    letter-spacing:0.24em; text-transform:uppercase;
+    color:rgba(248,245,255,0.3); margin-top:14px;
+  }
 
+  /* ── PROGRESS BAR ── */
   .progress-section { background:var(--mid); border-bottom:1px solid var(--border); padding:18px 40px; }
   .progress-inner { max-width:720px; margin:0 auto; padding:0 24px; }
   .progress-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
@@ -65,15 +118,37 @@
   .progress-track { height:2px; background:var(--border); border-radius:2px; overflow:hidden; }
   .progress-fill { height:100%; background:var(--gradient); border-radius:2px; }
 
+  /* ── MAIN CONTENT ── */
   .main-content { max-width:720px; margin:0 auto; padding:0 24px 80px; }
 
-  .step-header { padding:52px 0 36px; border-bottom:1px solid var(--border); margin-bottom:40px; opacity:0; animation:fadeUp 0.6s ease 0.1s forwards; }
-  .step-eyebrow { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-sec); margin-bottom:14px; display:flex; align-items:center; gap:10px; }
-  .step-number-badge-pill { display:inline-flex; align-items:center; justify-content:center; background:var(--cyan); color:#0a0a1f; font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; padding:4px 10px; border-radius:30px; flex-shrink:0; }
-  .step-title { font-family:'Fraunces',serif; font-weight:700; font-size:clamp(28px,5vw,40px); color:var(--text); line-height:1.15; margin-bottom:12px; }
-  .step-title .gradient-word { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; font-style:italic; }
+  /* ── STEP HEADER ── */
+  .step-header {
+    padding:52px 0 36px; border-bottom:1px solid var(--border);
+    margin-bottom:40px; opacity:0; animation:fadeUp 0.6s ease 0.1s forwards;
+  }
+  .step-eyebrow {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+    letter-spacing:0.22em; text-transform:uppercase; color:var(--text-sec);
+    margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .step-number-badge-pill {
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--cyan); color:#0a0a1f; font-family:'Inter',sans-serif;
+    font-weight:600; font-size:10px; letter-spacing:0.14em;
+    text-transform:uppercase; padding:4px 10px; border-radius:30px; flex-shrink:0;
+  }
+  .step-title {
+    font-family:'Fraunces',serif; font-weight:700;
+    font-size:clamp(28px,5vw,40px); color:var(--text);
+    line-height:1.15; margin-bottom:12px;
+  }
+  .step-title .gradient-word {
+    background:var(--gradient); -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent; background-clip:text; font-style:italic;
+  }
   .step-subtitle { font-family:'Inter',sans-serif; font-weight:300; font-size:15px; color:var(--text-sec); line-height:1.7; }
 
+  /* ── SECTION BLOCKS ── */
   .section-block { margin-bottom:40px; opacity:0; animation:fadeUp 0.6s ease forwards; }
   .section-block:nth-child(2) { animation-delay:0.2s; }
   .section-block:nth-child(3) { animation-delay:0.3s; }
@@ -81,164 +156,143 @@
   .section-block:nth-child(5) { animation-delay:0.5s; }
   .section-block:nth-child(6) { animation-delay:0.6s; }
 
-  .section-label { font-family:'Inter',sans-serif; font-weight:600; font-size:9px; letter-spacing:0.24em; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+  /* ── CANONICAL section-label ── */
+  .section-label {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:9px;
+    letter-spacing:0.24em; text-transform:uppercase; color:var(--cyan);
+    margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border);
+  }
   .section-label.magenta { color:var(--magenta); border-bottom-color:rgba(246,43,209,0.2); }
 
+  /* ── TEACHING COPY ── */
   .teaching-copy p { font-family:'Inter',sans-serif; font-weight:300; font-size:15px; line-height:1.85; color:var(--text-sec); margin-bottom:16px; }
   .teaching-copy p:last-child { margin-bottom:0; }
 
-  .somatic-block { background:var(--card); backdrop-filter:blur(20px); border:1px solid var(--glow-border); border-radius:16px; padding:36px 40px 32px; margin-bottom:24px; text-align:center; transition:box-shadow 0.3s; }
+  /* ── SOMATIC BLOCK ── */
+  .somatic-block {
+    background:var(--card); backdrop-filter:blur(20px);
+    border:1px solid var(--glow-border); border-radius:16px;
+    padding:36px 40px 32px; margin-bottom:24px;
+    text-align:center; transition:box-shadow 0.3s;
+  }
   .somatic-block:hover { box-shadow:0 0 28px rgba(28,214,231,0.1); }
   .breathing-ring { width:72px; height:72px; margin:0 auto 20px; position:relative; display:flex; align-items:center; justify-content:center; }
   .breathing-ring span { position:absolute; border-radius:50%; animation:breathe 4s ease-in-out infinite; }
-  .breathing-ring span:nth-child(1) { width:24px;height:24px;animation-delay:0s; border:1.5px solid rgba(28,214,231,0.7); }
+  .breathing-ring span:nth-child(1) { width:24px;height:24px;animation-delay:0s;  border:1.5px solid rgba(28,214,231,0.7); }
   .breathing-ring span:nth-child(2) { width:44px;height:44px;animation-delay:0.4s;border:1.5px solid rgba(28,214,231,0.4); }
   .breathing-ring span:nth-child(3) { width:64px;height:64px;animation-delay:0.8s;border:1.5px solid rgba(28,214,231,0.15); }
-  @keyframes breathe { 0%,100% { transform:scale(0.92); opacity:0.6; } 50% { transform:scale(1.06); opacity:1; } }
+  @keyframes breathe {
+    0%,100% { transform:scale(0.92); opacity:0.6; }
+    50% { transform:scale(1.06); opacity:1; }
+  }
   .somatic-heading { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--cyan); margin-bottom:14px; }
   .somatic-block p { font-family:'Inter',sans-serif; font-weight:400; font-size:14px; line-height:1.8; color:var(--text-sec); max-width:480px; margin:0 auto; }
 
-  .reflection-card { background:var(--card); backdrop-filter:blur(20px); border:1px solid var(--border); border-left:3px solid var(--cyan); border-radius:0 12px 12px 0; padding:28px 28px 24px; margin-bottom:16px; box-shadow:0 0 18px rgba(28,214,231,0.08),0 0 40px rgba(28,214,231,0.04); transition:box-shadow 0.3s; }
+  /* ── REFLECTION CARD ── */
+  .reflection-card {
+    background:var(--card); backdrop-filter:blur(20px);
+    border:1px solid var(--border); border-left:3px solid var(--cyan);
+    border-radius:0 12px 12px 0; padding:28px 28px 24px; margin-bottom:16px;
+    box-shadow:0 0 18px rgba(28,214,231,0.08),0 0 40px rgba(28,214,231,0.04);
+    transition:box-shadow 0.3s;
+  }
   .reflection-card:hover { box-shadow:0 0 24px rgba(28,214,231,0.18),0 0 60px rgba(28,214,231,0.08); }
-  .reflection-card.magenta-accent { border-left-color:var(--magenta); box-shadow:0 0 18px rgba(246,43,209,0.08),0 0 40px rgba(246,43,209,0.04); }
+  .reflection-card.magenta-accent {
+    border-left-color:var(--magenta);
+    box-shadow:0 0 18px rgba(246,43,209,0.08),0 0 40px rgba(246,43,209,0.04);
+  }
   .reflection-card.magenta-accent:hover { box-shadow:0 0 24px rgba(246,43,209,0.18),0 0 60px rgba(246,43,209,0.08); }
   .reflection-prompt { font-family:'Inter',sans-serif; font-weight:400; font-size:14px; line-height:1.8; color:var(--text-sec); margin-bottom:18px; }
   .starter-phrase { font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--cyan); letter-spacing:0.04em; margin-bottom:10px; display:block; }
   .starter-phrase.magenta { color:var(--magenta); }
 
-  textarea { width:100%; min-height:120px; background:rgba(10,10,31,0.6); border:1px solid var(--border); border-top:2px solid var(--cyan); border-radius:8px; padding:14px 16px; font-family:'Inter',sans-serif; font-weight:300; font-size:14px; line-height:1.7; color:var(--text); resize:vertical; transition:border-color 0.2s,box-shadow 0.2s; outline:none; }
+  textarea {
+    width:100%; min-height:120px; background:rgba(10,10,31,0.6);
+    border:1px solid var(--border); border-top:2px solid var(--cyan);
+    border-radius:8px; padding:14px 16px;
+    font-family:'Inter',sans-serif; font-weight:300; font-size:14px;
+    line-height:1.7; color:var(--text); resize:vertical;
+    transition:border-color 0.2s,box-shadow 0.2s; outline:none;
+  }
   textarea:focus { border-top-color:var(--cyan); box-shadow:0 0 0 3px rgba(28,214,231,0.12),inset 0 0 20px rgba(28,214,231,0.04); }
   textarea::placeholder { color:rgba(248,245,255,0.25); font-weight:300; }
   textarea.magenta-top { border-top-color:var(--magenta); }
   textarea.magenta-top:focus { border-top-color:var(--magenta); box-shadow:0 0 0 3px rgba(246,43,209,0.12),inset 0 0 20px rgba(246,43,209,0.04); }
 
+  /* ── ANCHOR ROWS ── */
   .anchor-rows { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
   .anchor-row { display:flex; align-items:flex-start; gap:12px; }
-  .anchor-num { font-family:'Fraunces',serif; font-weight:600; font-size:12px; color:var(--cyan); width:22px; flex-shrink:0; padding-top:13px; opacity:0.6; }
-  .anchor-input { flex:1; background:rgba(10,10,31,0.6); border:1px solid var(--border); border-top:2px solid var(--cyan); border-radius:8px; padding:12px 14px; color:var(--text); font-family:'Inter',sans-serif; font-weight:300; font-size:14px; line-height:1.6; resize:none; min-height:48px; outline:none; transition:box-shadow 0.2s; }
+  .anchor-num {
+    font-family:'Fraunces',serif; font-weight:600; font-size:12px;
+    color:var(--cyan); width:22px; flex-shrink:0;
+    padding-top:13px; opacity:0.6;
+  }
+  .anchor-input {
+    flex:1; background:rgba(10,10,31,0.6);
+    border:1px solid var(--border); border-top:2px solid var(--cyan);
+    border-radius:8px; padding:12px 14px; color:var(--text);
+    font-family:'Inter',sans-serif; font-weight:300; font-size:14px;
+    line-height:1.6; resize:none; min-height:48px; outline:none;
+    transition:box-shadow 0.2s;
+  }
   .anchor-input:focus { box-shadow:0 0 0 3px rgba(28,214,231,0.12),inset 0 0 14px rgba(28,214,231,0.04); }
   .anchor-input::placeholder { color:rgba(248,245,255,0.25); }
-  .add-row-btn { background:transparent; border:1px dashed rgba(28,214,231,0.3); border-radius:8px; padding:10px 18px; color:var(--cyan); font-family:'Inter',sans-serif; font-weight:600; font-size:12px; letter-spacing:0.06em; cursor:pointer; transition:background 0.2s,border-color 0.2s; display:inline-block; margin-top:4px; }
+  .add-row-btn {
+    background:transparent; border:1px dashed rgba(28,214,231,0.3);
+    border-radius:8px; padding:10px 18px; color:var(--cyan);
+    font-family:'Inter',sans-serif; font-weight:600; font-size:12px;
+    letter-spacing:0.06em; cursor:pointer; transition:background 0.2s,border-color 0.2s;
+    display:inline-block; margin-top:4px;
+  }
   .add-row-btn:hover { background:rgba(28,214,231,0.06); border-color:rgba(28,214,231,0.55); }
 
-  .copy-row { display:flex; flex-direction:column; align-items:flex-end; gap:8px; margin-top:20px; padding-top:20px; border-top:1px solid var(--border); }
-  .btn-copy-responses { font-family:'Inter',sans-serif; font-weight:600; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; background:var(--gradient); border:none; color:#fff; padding:12px 28px; border-radius:30px; cursor:pointer; transition:opacity 0.2s,transform 0.2s; display:inline-flex; align-items:center; gap:8px; }
+  /* ── COPY ROW ── */
+  .copy-row {
+    display:flex; flex-direction:column; align-items:flex-end;
+    gap:8px; margin-top:20px; padding-top:20px; border-top:1px solid var(--border);
+  }
+  .btn-copy-responses {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:11px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    background:var(--gradient); border:none; color:#fff;
+    padding:12px 28px; border-radius:30px; cursor:pointer;
+    transition:opacity 0.2s,transform 0.2s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
   .btn-copy-responses:hover { opacity:0.85; transform:translateY(-1px); }
-  .copy-confirm { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--cyan); opacity:0; transition:opacity 0.3s; min-height:16px; }
+  .copy-confirm {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+    letter-spacing:0.14em; text-transform:uppercase; color:var(--cyan);
+    opacity:0; transition:opacity 0.3s; min-height:16px;
+  }
   .copy-confirm.show { opacity:1; }
 
-  .export-section { margin-top:48px; background:var(--card); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:16px; padding:32px; opacity:0; animation:fadeUp 0.6s ease 0.8s forwards; }
+  /* ── EXPORT ── */
+  .export-section {
+    margin-top:48px; background:var(--card); backdrop-filter:blur(20px);
+    border:1px solid var(--border); border-radius:16px; padding:32px;
+    opacity:0; animation:fadeUp 0.6s ease 0.8s forwards;
+  }
   .save-title { font-family:'Fraunces',serif; font-weight:700; font-size:22px; color:var(--text); margin-bottom:6px; }
   .save-description { font-family:'Inter',sans-serif; font-weight:300; font-size:13px; color:var(--text-sec); line-height:1.6; }
 
-  /* ── ACTIVATION GATE ── */
-  .activation-gate {
-    margin-top:48px;
-    position:relative;
-    border-radius:24px;
-    overflow:hidden;
-    opacity:0;
-    animation:fadeUp 0.6s ease 1s forwards;
+  /* ── FOOTER STACK ── */
+  .footer-stack { margin-top:20px; display:flex; flex-direction:column; gap:12px; }
+  .btn-next-step {
+    display:block; width:100%; padding:18px 24px; background:var(--gradient);
+    color:#fff; font-family:'Inter',sans-serif; font-weight:600; font-size:12px;
+    letter-spacing:0.16em; text-transform:uppercase; text-align:center;
+    text-decoration:none; border-radius:30px; transition:opacity 0.2s; border:none;
   }
-  .gate-bg {
-    position:absolute; inset:0;
-    background:linear-gradient(135deg, rgba(28,214,231,0.08) 0%, rgba(128,81,200,0.12) 50%, rgba(246,43,209,0.10) 100%);
-    border:1px solid rgba(255,255,255,0.1);
-    border-radius:24px;
+  .btn-next-step:hover { opacity:0.85; }
+  .btn-skool {
+    display:block; width:100%; padding:18px 24px;
+    background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.9);
+    border:1px solid rgba(255,255,255,0.6); font-family:'Inter',sans-serif;
+    font-weight:600; font-size:12px; letter-spacing:0.16em; text-transform:uppercase;
+    text-align:center; text-decoration:none; border-radius:30px; transition:all 0.2s;
   }
-  .gate-bg::before {
-    content:'';
-    position:absolute; inset:0;
-    background:radial-gradient(ellipse at 50% 0%, rgba(246,43,209,0.18) 0%, transparent 65%);
-    border-radius:24px;
-  }
-  /* animated gradient top border */
-  .gate-border-top {
-    position:absolute; top:0; left:0; right:0; height:3px;
-    background:var(--gradient);
-    background-size:200% 100%;
-    animation:borderPan 4s ease-in-out infinite;
-    border-radius:24px 24px 0 0;
-  }
-  @keyframes borderPan { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
-
-  .gate-inner {
-    position:relative;
-    padding:52px 40px 48px;
-    text-align:center;
-    z-index:1;
-  }
-
-  /* orbiting sparkles */
-  .gate-sparkles {
-    position:absolute; inset:0; pointer-events:none; overflow:hidden;
-    border-radius:24px;
-  }
-  .gate-spark {
-    position:absolute; font-size:13px;
-    animation:orbitSpark var(--sd,6s) ease-in-out infinite var(--del,0s);
-    opacity:0;
-  }
-  @keyframes orbitSpark {
-    0%,100% { opacity:0; transform:scale(0.5) rotate(0deg); }
-    50% { opacity:0.9; transform:scale(1.1) rotate(180deg); }
-  }
-
-  .gate-eyebrow {
-    font-family:'Inter',sans-serif; font-weight:600; font-size:9px;
-    letter-spacing:0.28em; text-transform:uppercase;
-    color:rgba(248,245,255,0.5); margin-bottom:20px;
-  }
-
-  .gate-headline {
-    font-family:'Fraunces',serif; font-weight:700;
-    font-size:clamp(26px,4.5vw,42px);
-    line-height:1.15; margin-bottom:18px;
-    background:var(--gradient);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    background-clip:text;
-    background-size:200% 200%;
-    animation:textShimmer 5s ease-in-out infinite;
-    font-style:italic;
-  }
-  @keyframes textShimmer { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
-
-  .gate-sub {
-    font-family:'Inter',sans-serif; font-weight:300; font-size:15px;
-    color:var(--text-sec); line-height:1.8; max-width:480px;
-    margin:0 auto 36px;
-  }
-
-  /* energy orb above headline */
-  .gate-orb {
-    width:64px; height:64px; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #f4e060, #f4a749 40%, #f62bd1 80%);
-    margin:0 auto 24px;
-    box-shadow:0 0 30px rgba(246,43,209,0.5), 0 0 60px rgba(244,167,73,0.3);
-    animation:orbPulse 3s ease-in-out infinite;
-  }
-  @keyframes orbPulse {
-    0%,100% { box-shadow:0 0 30px rgba(246,43,209,0.5),0 0 60px rgba(244,167,73,0.3); transform:scale(1); }
-    50% { box-shadow:0 0 50px rgba(246,43,209,0.7),0 0 90px rgba(244,167,73,0.45); transform:scale(1.06); }
-  }
-
-  .btn-gate {
-    display:inline-block; width:100%; max-width:420px;
-    padding:20px 32px;
-    background:var(--gradient);
-    color:#fff; font-family:'Inter',sans-serif; font-weight:600;
-    font-size:13px; letter-spacing:0.18em; text-transform:uppercase;
-    text-align:center; text-decoration:none; border-radius:30px;
-    border:none; cursor:pointer;
-    box-shadow:0 8px 28px rgba(246,43,209,0.35), 0 0 0 0 rgba(246,43,209,0.4);
-    animation:btnPulse 3s ease-in-out infinite;
-    transition:transform 0.2s, opacity 0.2s;
-  }
-  .btn-gate:hover { transform:translateY(-2px); opacity:0.9; }
-  @keyframes btnPulse {
-    0%,100% { box-shadow:0 8px 28px rgba(246,43,209,0.35),0 0 0 0 rgba(246,43,209,0.3); }
-    50% { box-shadow:0 12px 40px rgba(246,43,209,0.5),0 0 0 10px rgba(246,43,209,0); }
-  }
+  .btn-skool:hover { background:rgba(255,255,255,0.09); border-color:#fff; }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
 
@@ -251,7 +305,6 @@
     .export-section { padding:24px 20px; }
     .somatic-block { padding:28px 20px 24px; }
     .reflection-card { padding:22px 18px; }
-    .gate-inner { padding:40px 24px 36px; }
   }
 </style>
 </head>
@@ -263,12 +316,14 @@
 
 <div class="page-wrap">
 
+  <!-- INTENTION BLOCK -->
   <div class="intention-block">
     <div class="phase-eyebrow">Selection Phase · Step 7 of 7</div>
-    <div class="intention-statement">I am training my awareness to recognize evidence that my new timeline is already becoming real.</div>
+    <div class="intention-statement">I remember what it felt like to watch my new timeline become real, one sign at a time.</div>
     <div class="intention-subtext">Set this intention before you begin</div>
   </div>
 
+  <!-- PROGRESS BAR -->
   <div class="progress-section">
     <div class="progress-inner">
       <div class="progress-meta">
@@ -281,38 +336,44 @@
     </div>
   </div>
 
+  <!-- MAIN CONTENT -->
   <div class="main-content">
 
+    <!-- STEP HEADER -->
     <div class="step-header">
       <div class="step-eyebrow">
         <span class="step-number-badge-pill">Step 7</span>
         Selection Phase
       </div>
       <h1 class="step-title">Create Your <span class="gradient-word">Timeline Anchors</span></h1>
-      <p class="step-subtitle">Signs, signals, and visual evidence that confirm your new timeline is already coming into form.</p>
+      <p class="step-subtitle">Looking back from the life beyond your anchor point, remember the signs and signals that told you your new timeline was coming into form.</p>
     </div>
 
+    <!-- TEACHING COPY -->
     <div class="section-block teaching-copy">
       <div class="section-label">What This Step Is</div>
-      <p>In this step you are going to create your timeline anchors: the signs and signals you would expect to experience on the timeline you are selecting. These are things that could come up in your day to day that tell you your new reality is coming into form.</p>
-      <p>This is about calibrating your perception and training your brain to look for confirming evidence. Where your focus goes, energy flows. You are programming your subconscious to understand that these signs are important to you so that your energy begins to direct itself toward finding them.</p>
-      <p>You are not waiting for proof. You are choosing what to look for. And by looking for it, you create the conditions for it to show up.</p>
+      <p>In this step you are going to go back to that place 3 to 6 months beyond your anchor point, where everything has already shifted and the new timeline is simply your life. From that place, you look back at the journey and remember the signs and signals you noticed along the way. The things that kept showing up and telling you that your new reality was coming into form.</p>
+      <p>This matters because your subconscious moves toward what you program it to recognize. When you name these signs from the felt memory of having already lived them, you are not waiting for proof. You are recalling it. And your subconscious does not distinguish between a vivid memory and the present moment. That is the power of this exercise.</p>
+      <p>You are not watching for something to happen. You are remembering that it did.</p>
     </div>
 
+    <!-- SOMATIC BLOCK -->
     <div class="section-block somatic-block">
       <div class="breathing-ring"><span></span><span></span><span></span></div>
       <div class="somatic-heading">Before You Write</div>
-      <p>Take a breath and bring your new timeline to mind. Feel into it for a moment. What does that reality feel like? Let that feeling guide what you write below.</p>
+      <p>Take a breath and step back into that place beyond your anchor point. The shift has happened. You are settled into the new timeline. Now look back over the journey that got you here. What did you notice along the way that told you things were changing? Let that memory come forward before you write.</p>
     </div>
 
+    <!-- EVIDENCE ANCHORS -->
     <div class="section-block">
       <div class="section-label">Part One: Evidence Anchors</div>
       <div class="teaching-copy" style="margin-bottom:24px;">
-        <p>Make an itemized list of signs and signals you would expect to see on your new timeline. Think about what would show up in your email inbox, in your bank account, in conversations, in your body, or in the kinds of opportunities that come your way. Keep this list handy and revisit it daily or weekly. You can always add to it.</p>
+        <p>Looking back from beyond your anchor point, make a list of the signs and signals you noticed that told you your new timeline was becoming real. Think about what started showing up in your inbox, your bank account, your conversations, your body, and the kinds of opportunities that came your way. These are the breadcrumbs you followed. List as many as come to mind.</p>
       </div>
+
       <div class="reflection-card">
-        <p class="reflection-prompt">What signs or signals would tell you that your new timeline is becoming real? List anything that would look or feel different from your current reality.</p>
-        <span class="starter-phrase">On my new timeline I would notice...</span>
+        <p class="reflection-prompt">Looking back from beyond your anchor point, what signs and signals told you that your new timeline was becoming real? What started showing up that was different from before?</p>
+        <span class="starter-phrase">Looking back, I noticed...</span>
         <div class="anchor-rows" id="anchorRows">
           <div class="anchor-row"><span class="anchor-num">01</span><textarea class="anchor-input" rows="1" placeholder="e.g. unexpected money showing up, new opportunities appearing, my body feeling lighter..." oninput="autoResize(this)"></textarea></div>
           <div class="anchor-row"><span class="anchor-num">02</span><textarea class="anchor-input" rows="1" placeholder="" oninput="autoResize(this)"></textarea></div>
@@ -324,30 +385,35 @@
       </div>
     </div>
 
+    <!-- RANDOM CONFIRMATION SIGN -->
     <div class="section-block">
       <div class="section-label magenta">Part Two: Your Random Confirmation Sign</div>
       <div class="teaching-copy" style="margin-bottom:24px;">
-        <p>Add at least one anchor that is so random you would not ordinarily expect to see it. When this sign appears in your life, you will know without question that your timeline is locking in. Your higher self and spirit team will find ways to put it in front of you because you placed it on the list and made it important to you.</p>
-        <p>For example: blue feathers. Not something you would normally spot on a walk or in your neighborhood, but one day a logo, a truck, a storefront might show it to you. And you will know.</p>
+        <p>Now add one piece of evidence that is so random, so unexpected, that seeing it in your daily life could only mean one thing. Looking back from beyond your anchor point, this was the sign that stopped you in your tracks. The one that made you smile because you knew. Your higher self and your spirit team found ways to put it in front of you because you had made it important. You had put it on the list.</p>
+        <p>For example: blue feathers. Not something you would normally spot on a walk or in your neighborhood, but one day a logo, a truck, a storefront showed it to you. And you knew.</p>
       </div>
+
       <div class="reflection-card magenta-accent">
-        <p class="reflection-prompt">What is your random confirmation sign? Choose something unexpected, something that would make you stop and smile if it appeared.</p>
-        <span class="starter-phrase magenta">My random confirmation sign is...</span>
+        <p class="reflection-prompt">Looking back, what was the unexpected sign that kept appearing to confirm you were on the right path? The one that felt too specific to be a coincidence.</p>
+        <span class="starter-phrase magenta">The sign that kept showing up for me was...</span>
         <textarea id="ta-random" class="magenta-top" placeholder="Describe your unexpected sign." oninput="autosave('random')"></textarea>
       </div>
     </div>
 
+    <!-- VISUAL ANCHOR -->
     <div class="section-block">
       <div class="section-label">Part Three: Visual Timeline Anchor</div>
       <div class="teaching-copy" style="margin-bottom:24px;">
-        <p>Create a visual that represents your new timeline. This can be a Canva image, a journal drawing, a phone wallpaper, or a vivid mental picture you can call up instantly. It does not need to be elaborate. What matters is that you can pull it to mind easily.</p>
-        <p>Use this image first thing in the morning and right before you go to bed. Anytime your mind begins to drift or doubt starts creeping in, call up this image and redirect your energy toward what you are building.</p>
+        <p>Create a visual that represents the life beyond your anchor point. This is the image of that settled, shifted reality you have been stepping into throughout this phase. It can be a Canva image, a journal drawing, a phone wallpaper, or a vivid mental picture you can call up instantly. It does not need to be elaborate. What matters is that when you see it, you feel that place.</p>
+        <p>Use this image first thing in the morning and right before you go to bed. Anytime your mind begins to drift or doubt starts creeping in, call up this image and return to that feeling of already being there.</p>
       </div>
+
       <div class="reflection-card">
         <p class="reflection-prompt">Describe your visual anchor. What does it look like? What does it feel like when you see it? How will you make it accessible, on your phone, in your journal, or as a mental image you can summon?</p>
         <span class="starter-phrase">My visual anchor is...</span>
         <textarea id="ta-visual" placeholder="Describe your image and how you will use it each day." oninput="autosave('visual')"></textarea>
       </div>
+
       <div class="copy-row">
         <button class="btn-copy-responses" onclick="copyResponses()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -363,34 +429,20 @@
       <p class="save-description">Your responses are not saved automatically. Use the Copy My Responses button above to copy them, then paste into your notes app on your phone or computer.</p>
     </div>
 
-    <!-- ACTIVATION GATE -->
-    <div class="activation-gate">
-      <div class="gate-bg"></div>
-      <div class="gate-border-top"></div>
-      <div class="gate-sparkles">
-        <span class="gate-spark" style="top:12%;left:8%;color:#1cd6e7;--sd:5s;--del:0s;">✦</span>
-        <span class="gate-spark" style="top:18%;right:10%;color:#f62bd1;--sd:7s;--del:1s;">★</span>
-        <span class="gate-spark" style="top:60%;left:5%;color:#f4a749;--sd:6s;--del:2s;">✧</span>
-        <span class="gate-spark" style="top:70%;right:7%;color:#8051c8;--sd:8s;--del:0.5s;">✦</span>
-        <span class="gate-spark" style="bottom:15%;left:15%;color:#1cd6e7;--sd:5.5s;--del:3s;">✧</span>
-        <span class="gate-spark" style="bottom:20%;right:14%;color:#f62bd1;--sd:6.5s;--del:1.5s;">★</span>
-      </div>
-      <div class="gate-inner">
-        <div class="gate-eyebrow">✦ Selection Phase Complete ✦</div>
-        <div class="gate-orb"></div>
-        <h2 class="gate-headline">It's Time to Activate<br>Your New Timeline</h2>
-        <p class="gate-sub">You have selected your reality. You have named it, felt it, and anchored it. The Selection phase is complete. Now the real energy work begins. Head back to the classroom and into the Activation module.</p>
-        <a href="https://www.skool.com/timeline-jumpers-9976/classroom" target="_blank" class="btn-gate">Take Me Back to Skool →</a>
-      </div>
+    <!-- FOOTER STACK -->
+    <div class="footer-stack">
+      <a href="https://ceydaseren.github.io/tjstep8/" target="_blank" class="btn-next-step">Move to Activation Phase →</a>
+      <a href="https://www.skool.com/timeline-jumpers-9976/classroom" target="_blank" class="btn-skool">Take Me Back to Skool</a>
     </div>
 
-  </div>
+  </div><!-- /main-content -->
 
   <div class="copyright">© 2026 Ceyda Seren. All rights reserved.</div>
 
-</div>
+</div><!-- /page-wrap -->
 
 <script>
+  // ── STARS ──
   const starsEl = document.getElementById('stars');
   for (let i = 0; i < 120; i++) {
     const s = document.createElement('div');
@@ -400,6 +452,7 @@
     starsEl.appendChild(s);
   }
 
+  // ── CURSOR TRAIL — desktop only ──
   if (!('ontouchstart' in window)) {
     const colors = ['#1cd6e7','#8051c8','#f62bd1','#f4a749'];
     let moveCount = 0;
@@ -423,6 +476,7 @@
     });
   }
 
+  // ── TAP RIPPLE — mobile only ──
   if ('ontouchstart' in window) {
     document.addEventListener('touchstart', e => {
       const t = e.touches[0];
@@ -433,6 +487,7 @@
     }, { passive: true });
   }
 
+  // ── SESSION STORAGE ──
   function autosave(key) {
     sessionStorage.setItem('tj_step7_' + key, document.getElementById('ta-' + key)?.value || '');
   }
@@ -442,11 +497,13 @@
     if (saved && el) el.value = saved;
   });
 
+  // ── AUTO RESIZE ──
   function autoResize(el) {
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
   }
 
+  // ── ADD ANCHOR ROW ──
   let anchorCount = 5;
   function addAnchorRow() {
     anchorCount++;
@@ -458,20 +515,25 @@
     row.querySelector('textarea').focus();
   }
 
+  // ── COPY — canonical ──
   function copyResponses() {
     let compiled = 'TIMELINE JUMPERS — Step 7: Timeline Anchors\n' + '-'.repeat(50) + '\n\n';
-    compiled += 'EVIDENCE ANCHORS\nOn my new timeline I would notice...\n';
+
+    compiled += 'EVIDENCE ANCHORS\nLooking back, I noticed...\n';
     document.querySelectorAll('#anchorRows .anchor-input').forEach((ta, i) => {
       const v = ta.value.trim();
       if (v) compiled += `${String(i+1).padStart(2,'0')}. ${v}\n`;
     });
+
     const random = document.getElementById('ta-random')?.value.trim() || '';
-    if (random) compiled += `\nRANDOM CONFIRMATION SIGN\nMy random confirmation sign is...\n${random}\n`;
+    if (random) compiled += `\nRANDOM CONFIRMATION SIGN\nThe sign that kept showing up for me was...\n${random}\n`;
+
     const visual = document.getElementById('ta-visual')?.value.trim() || '';
     if (visual) compiled += `\nVISUAL ANCHOR\nMy visual anchor is...\n${visual}\n`;
 
     const confirm = document.getElementById('copy-confirm');
     const show = () => { confirm.classList.add('show'); setTimeout(() => confirm.classList.remove('show'), 2500); };
+
     navigator.clipboard.writeText(compiled).then(show).catch(() => {
       const el = document.createElement('textarea');
       el.value = compiled; el.style.cssText = 'position:fixed;opacity:0';
